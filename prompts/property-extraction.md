@@ -26,6 +26,7 @@ A single message and, when available, trusted event metadata such as message ID 
 ## Required JSON schema
 
 {
+  "message_id": null,
   "is_property_listing": true,
   "reason": null,
   "date": null,
