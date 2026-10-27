@@ -11,6 +11,10 @@ It is designed for real-estate teams receiving property details in varied format
 
 **Processing boundary:** this reference design processes authorized incoming messages only. It does not send replies or messages to WhatsApp groups. Production use requires approved access, secure credentials, and compliance with the provider's terms and the client's data-handling requirements.
 
+## Related case study
+
+See the [sanitized real-estate property extraction case study](https://github.com/AIwithsanaullah/ai-web-and-app-development/blob/main/docs/CASE_STUDY_WHATSAPP_PROPERTY_EXTRACTION.md) for the business problem, workflow stages, privacy boundary, and clearly qualified operator-reported throughput. It contains no private client messages or contact data.
+
 ## Business problem
 
 Property details often arrive as unstructured text. Manually copying them into spreadsheets can be slow and inconsistent. This project describes a repeatable workflow to:
