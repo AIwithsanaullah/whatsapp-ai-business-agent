@@ -88,7 +88,10 @@ Missing information should remain null. Never infer a phone number, price, plot 
 - prompts/property-extraction.md — extraction rules and output contract.
 - examples/sample_messages.json — fictional input messages.
 - examples/expected_output.json — expected structured records.
-- workflows/whatsapp-property-extraction-blueprint.json — tool-agnostic workflow blueprint.
+- workflows/whatsapp-property-extraction-blueprint.json — tool-agnostic workflow blueprint (not a directly importable n8n export).
+- scripts/validate-examples.js — dependency-free structural validator for the synthetic expected-output records.
+- tests/README.md — recommended test cases for extraction, deduplication, retries, and failures.
+- docs/TESTING_AND_METRICS.md — test instructions and responsible performance reporting.
 - docs/WORKFLOW_DESIGN.md — component responsibilities and operating rules.
 - docs/EXAMPLE_INPUT_OUTPUT.md — sample walkthrough and validation cases.
 - docs/SECURITY_AND_PRIVACY.md — deployment and data protection checklist.
