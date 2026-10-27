@@ -1,0 +1,68 @@
+{
+  "name": "WhatsApp Property Extraction - Reference Blueprint",
+  "version": "1.0.0",
+  "status": "reference-blueprint",
+  "purpose": "Process authorized incoming WhatsApp messages into validated property records without sending outbound messages.",
+  "outbound_messaging_enabled": false,
+  "steps": [
+    {
+      "id": "receive_event",
+      "type": "webhook",
+      "description": "Receive an authenticated incoming message event from the configured provider.",
+      "required_inputs": ["message_id", "text"],
+      "security": ["verify_provider_signature_or_secret", "reject_unexpected_event_types"]
+    },
+    {
+      "id": "normalize",
+      "type": "transform",
+      "description": "Normalize event fields while preserving meaningful text, plot identifiers, units, and phone digits.",
+      "outputs": ["message_id", "timestamp", "text", "sender_metadata"]
+    },
+    {
+      "id": "classify",
+      "type": "classifier",
+      "description": "Determine whether the message contains a relevant real-estate listing.",
+      "on_not_relevant": "ignore_or_log_by_policy"
+    },
+    {
+      "id": "extract",
+      "type": "llm_structured_extraction",
+      "prompt_file": "prompts/property-extraction.md",
+      "description": "Extract fields supported by the source message and use null for missing values."
+    },
+    {
+      "id": "validate",
+      "type": "schema_validation",
+      "description": "Validate JSON types, enums, required keys, and field consistency.",
+      "on_invalid": "needs_review"
+    },
+    {
+      "id": "deduplicate",
+      "type": "record_matching",
+      "description": "When all values are present, compare block, plot_number, and phone. Do not merge records with missing or ambiguous key values.",
+      "on_duplicate": "keep_more_complete_record_and_audit"
+    },
+    {
+      "id": "write_record",
+      "type": "destination_write",
+      "description": "Write the validated record to a configured spreadsheet, CRM, or database using least-privilege credentials.",
+      "idempotency_key": "message_id"
+    },
+    {
+      "id": "log_result",
+      "type": "sanitized_audit_log",
+      "description": "Record message ID, processing outcome, and sanitized errors without exposing secrets or unnecessary message content."
+    }
+  ],
+  "required_environment_configuration": [
+    "MESSAGE_PROVIDER_WEBHOOK_SECRET",
+    "AI_PROVIDER_CREDENTIAL",
+    "DESTINATION_CREDENTIAL",
+    "DESTINATION_FIELD_MAPPING"
+  ],
+  "notes": [
+    "This file describes workflow logic; it is not a directly importable n8n workflow.",
+    "Provider-specific payload mappings and credentials must be configured for each deployment.",
+    "Use synthetic data for development and testing."
+  ]
+}
